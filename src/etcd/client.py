@@ -485,7 +485,7 @@ class Client(object):
             return self.read(key, wait=True, timeout=timeout,
                              recursive=recursive)
 
-    def eternal_watch(self, key, index=None):
+    def eternal_watch(self, key, index=None, recursive=None):
         """
         Generator that will yield changes from a key.
         Note that this method will block forever until an event is generated.
@@ -493,6 +493,7 @@ class Client(object):
         Args:
             key (str):  Key to subcribe to.
             index (int):  Index from where the changes will be received.
+            recursive (bool): If you should recursively watch a dir
 
         Yields:
             client.EtcdResult
@@ -506,7 +507,7 @@ class Client(object):
         """
         local_index = index
         while True:
-            response = self.watch(key, index=local_index, timeout=0)
+            response = self.watch(key, index=local_index, timeout=0, recursive=recursive)
             if local_index is not None:
                 local_index += 1
             yield response
